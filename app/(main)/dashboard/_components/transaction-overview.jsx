@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import {
@@ -49,528 +49,32 @@ const COLORS = [
   "#9FA8DA",
 ];
 
-// ----- Chart of Accounts Table -----
-// This array holds your detailed Chart of Accounts with six columns.
+// Chart of Accounts Table
 const chartOfAccountsTable = [
-  [
-    "Accounts",
-    "Accounts",
-    "Sub-Accounts",
-    "Financial Statements",
-    "Individual Accounts",
-    "Sub Accounts",
-  ],
-  [
-    "Revenue",
-    "Revenue",
-    "Revenue",
-    "Income Statement",
-    "Individual Accounts",
-    "Sub Accounts",
-  ],
-  [
-    "Expenses",
-    "Revenue",
-    "Contra Revenue",
-    "Income Statement",
-    "Sales",
-    "Revenue",
-  ],
-  [
-    "Assets",
-    "Expenses",
-    "Expenses",
-    "Income Statement",
-    "Sales-Construction",
-    "Revenue",
-  ],
-  [
-    "Liabilities",
-    "Assets",
-    "Non- current Assets",
-    "Income Statement",
-    "Interest Income",
-    "Revenue",
-  ],
-  [
-    "Equity",
-    "Assets",
-    "Current Assets",
-    "Income Statement",
-    "Other Income",
-    "Revenue",
-  ],
-  [
-    "",
-    "Liabilities",
-    "Non- current Liabilities",
-    "Income Statement",
-    "Cost of sales",
-    "Direct Cost",
-  ],
-  [
-    "",
-    "Liabilities",
-    "Current Liabilities",
-    "Income Statement",
-    "Direct Cost-Equipment",
-    "Direct Cost",
-  ],
-  [
-    "",
-    "Equity",
-    "Equity",
-    "Income Statement",
-    "Direct Cost-Labour",
-    "Direct Cost",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Direct Cost-Motor Vehicle",
-    "Direct Cost",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Direct Cost-Material",
-    "Direct Cost",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Direct Cost-Permits & Site Costs",
-    "Direct Cost",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Marketing",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Professional fees",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Telephone & Internet",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Printing and stationery",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Business Permits",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Tourism levy",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Motor Vehicle expenses",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Transport & Travel",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Fuel",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Meals And Refreshment",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Electricity",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Water",
-    "Operating Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Staff expenses",
-    "Staff cost expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Rent",
-    "Establishement Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Repairs and Maintainance",
-    "Establishement Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Salaries & Wages",
-    "Staff cost expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Commissions",
-    "Staff cost expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Housing Levy",
-    "Staff cost expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Charity & Donations",
-    "Other Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Interest Expense",
-    "Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Bank charges",
-    "Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Credit Card charges",
-    "Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "M-Pesa charges",
-    "Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Open float charges",
-    "Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Depreciation Expense",
-    "Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Income Statement",
-    "Mpesa till charges",
-    "Expenses",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Bank/cash",
-    "Current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Inventory",
-    "Current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Accounts Receivable (A/R)",
-    "Current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Rent deposit",
-    "Current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Prepaid Expenses",
-    "Current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Prepaid Insurance",
-    "Current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Staff Advances",
-    "Current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Accumulated Depreciation",
-    "Non- current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Patents & Goodwill",
-    "Non- current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Furniture & Fittings",
-    "Non- current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Leasehold Improvements",
-    "Non- current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Computers",
-    "Non- current Assets",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Accounts Payable (A/P)",
-    "Current Liabilities",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Short term loan",
-    "Current Liabilities",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Deferred Income - current",
-    "Current Liabilities",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Accrued Expenses",
-    "Current Liabilities",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Accrued Income Taxes",
-    "Current Liabilities",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Long-term Debt",
-    "Non- current Liabilities",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Deferred Income Taxes",
-    "Non- current Liabilities",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Common Stock",
-    "Equity",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Retained Earnings",
-    "Equity",
-  ],
-  [
-    "",
-    "",
-    "",
-    "Balance sheet",
-    "Directors' Account",
-    "Equity",
-  ],
-  // Extra lines that Taylor Mason might add...
-  [
-    "Crypto",
-    "Assets",
-    "Digital Assets",
-    "Balance sheet",
-    "Bitcoin Wallet",
-    "Current Assets",
-  ],
-  [
-    "NFT",
-    "Assets",
-    "Digital Assets",
-    "Balance sheet",
-    "Art NFTs",
-    "Non- current Assets",
-  ],
+  ["Accounts", "Category", "Sub-Category", "Statement", "Individual Account", "Type"],
+  ["Revenue", "Revenue", "Revenue", "Income Statement", "Sales Revenue", "Revenue"],
+  ["Expenses", "Expenses", "Operating", "Income Statement", "Rent Expense", "Expense"],
+  ["Assets", "Assets", "Current", "Balance Sheet", "Bank/Cash", "Asset"],
+  ["Liabilities", "Liabilities", "Current", "Balance Sheet", "Accounts Payable", "Liability"],
+  ["Equity", "Equity", "Capital", "Balance Sheet", "Owner's Equity", "Equity"],
 ];
 
 export function DashboardOverview({ accounts, transactions }) {
-  // Only show transactions for the selected account.
   const [selectedAccountId, setSelectedAccountId] = useState(
     accounts.find((a) => a.isDefault)?.id || accounts[0]?.id
   );
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Filter transactions for the selected account.
   const accountTransactions = transactions.filter(
     (t) => t.accountId === selectedAccountId
   );
 
-  // Get recent transactions (last 5) or all based on isExpanded.
   const displayedTransactions = isExpanded
     ? accountTransactions.sort((a, b) => new Date(b.date) - new Date(a.date))
     : accountTransactions
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 5);
 
-  // Calculate expense breakdown for the current month.
   const currentDate = new Date();
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -582,14 +86,12 @@ export function DashboardOverview({ accounts, transactions }) {
     (t) => t.type === "EXPENSE"
   );
 
-  // Group expenses by category.
   const expensesByCategory = currentMonthExpenses.reduce((acc, transaction) => {
     const category = transaction.category || "Uncategorized";
     acc[category] = (acc[category] || 0) + transaction.amount;
     return acc;
   }, {});
 
-  // Format data for the Pie Chart.
   const pieChartData = Object.entries(expensesByCategory).map(
     ([category, amount]) => ({
       name: category,
@@ -597,76 +99,80 @@ export function DashboardOverview({ accounts, transactions }) {
     })
   );
 
-  // Identify the default cash/bank account name.
-  const cashBankAccount =
-    accounts.find(
+  // Determine cash/bank accounts (using account type)
+  const cashBankAccounts = accounts
+    .filter(
       (a) =>
         a.type &&
         (a.type.toLowerCase() === "cash" || a.type.toLowerCase() === "bank")
-    )?.name || "Bank/cash";
+    )
+    .map((a) => a.name);
 
-  // ----- Merge Sample Entries with Dynamic Transactions -----
-  // Define static sample entries (if you want them included).
-  const sampleEntries = [
-    ["Date", "Description", "Account", "Debit", "Credit"],
-    ["31/01/2024", "Rent", "Expense: Rent", "", "20000"],
-    ["31/01/2024", "Rent", cashBankAccount, "20000", ""],
-    ["31/01/2024", "Flowers", "Expense: Flowers", "106470", ""],
-    ["31/01/2024", "Flowers", cashBankAccount, "", "106470"],
-    ["31/01/2024", "Mileage", "Expense: Transport & Travel", "11315", ""],
-    ["31/01/2024", "Mileage", cashBankAccount, "", "11315"],
-    ["31/01/2024", "Bread", "Expense: Meals And Refreshment", "758", ""],
-    ["31/01/2024", "Bread", cashBankAccount, "", "758"],
-    ["31/01/2024", "Salary", "Expense: Salaries & Wages", "41780", ""],
-    ["31/01/2024", "Salary", cashBankAccount, "", "41780"],
-    ["31/01/2024", "Pots ans Oasis", "Expense: Staff expenses", "", "-"],
-  ];
-
-  // Build dynamic entries from your transactions array.
-  // We add prefixes based on transaction type.
+  // Build dynamic general entries for transactions
   const dynamicEntries = [["Date", "Description", "Account", "Debit", "Credit"]];
   accountTransactions.forEach((t) => {
     const dateStr = format(new Date(t.date), "yyyy-MM-dd");
     const description = t.description || "Untitled Transaction";
-    // Use transaction category as account name if available.
     const accountName = t.category || "Uncategorized";
     const amount = parseFloat(t.amount.toFixed(2));
+
     if (t.type === "EXPENSE") {
       dynamicEntries.push([dateStr, description, "Expense: " + accountName, amount, ""]);
-      dynamicEntries.push([dateStr, description, cashBankAccount, "", amount]);
+      dynamicEntries.push([dateStr, description, cashBankAccounts[0] || "Bank/Cash", "", amount]);
     } else if (t.type === "INCOME") {
-      dynamicEntries.push([dateStr, description, cashBankAccount, amount, ""]);
+      dynamicEntries.push([dateStr, description, cashBankAccounts[0] || "Bank/Cash", amount, ""]);
       dynamicEntries.push([dateStr, description, "Revenue: " + accountName, "", amount]);
+    } else if (t.type === "ASSET" || t.type === "ASSETS") {
+      dynamicEntries.push([dateStr, description, "Asset: " + accountName, amount, ""]);
+      dynamicEntries.push([dateStr, description, cashBankAccounts[0] || "Bank/Cash", "", amount]);
+    } else if (t.type === "LIABILITY" || t.type === "LIABILITIES") {
+      dynamicEntries.push([dateStr, description, cashBankAccounts[0] || "Bank/Cash", amount, ""]);
+      dynamicEntries.push([dateStr, description, "Liability: " + accountName, "", amount]);
+    } else if (t.type === "EQUITY") {
+      if (accountName === "owner-investment") {
+        dynamicEntries.push([dateStr, description, cashBankAccounts[0] || "Bank/Cash", amount, ""]);
+        dynamicEntries.push([dateStr, description, "Equity: " + accountName, "", amount]);
+      } else if (accountName === "owner-draw") {
+        dynamicEntries.push([dateStr, description, "Equity: " + accountName, amount, ""]);
+        dynamicEntries.push([dateStr, description, cashBankAccounts[0] || "Bank/Cash", "", amount]);
+      } else {
+        dynamicEntries.push([dateStr, description, cashBankAccounts[0] || "Bank/Cash", amount, ""]);
+        dynamicEntries.push([dateStr, description, "Equity: " + accountName, "", amount]);
+      }
     }
   });
 
-  // Merge sample entries with dynamic entries only if the flag is true.
   const mergedEntries = includeSampleEntries
-    ? sampleEntries.concat(dynamicEntries.slice(1))
+    ? [
+        ["Date", "Description", "Account", "Debit", "Credit"],
+        ["2024-01-31", "Rent Payment", "Expense: housing", 20000, ""],
+        ["2024-01-31", "Rent Payment", cashBankAccounts[0] || "Bank/Cash", "", 20000],
+        ["2024-01-31", "Salary Received", cashBankAccounts[0] || "Bank/Cash", 8000, ""],
+        ["2024-01-31", "Salary Received", "Revenue: salary", "", 8000],
+        ...dynamicEntries.slice(1),
+      ]
     : dynamicEntries;
 
-  // ----- Excel File Generation -----
   const handleDownloadExcel = () => {
-    // Require at least one entry.
     if (mergedEntries.length === 1) return;
 
     const workbook = XLSX.utils.book_new();
 
-    // ***** Chart of Accounts Sheet *****
+    // 1) Chart of Accounts sheet
     const coaSheet = XLSX.utils.aoa_to_sheet(chartOfAccountsTable);
     XLSX.utils.book_append_sheet(workbook, coaSheet, "Chart of Accounts");
 
-    // ***** General Entries Sheet (merged static & dynamic entries) *****
+    // 2) General Entries sheet
     const generalEntriesSheet = XLSX.utils.aoa_to_sheet(mergedEntries);
     XLSX.utils.book_append_sheet(workbook, generalEntriesSheet, "General Entries");
 
-    // ***** Trial Balance Sheet *****
+    // 3) Trial Balance sheet
     const uniqueAccounts = [
-      ...new Set(mergedEntries.slice(1).map((row) => row[2])),
+      ...new Set(mergedEntries.slice(1).map((row) => row[2]))
     ].sort();
     const tbData = [["Account", "Debit", "Credit", "Balance"]];
     uniqueAccounts.forEach((acc, index) => {
-      const row = index + 2;
+      const row = index + 2; // offset for header row
       tbData.push([
         acc,
         { f: `SUMIF('General Entries'!C:C, A${row}, 'General Entries'!D:D)` },
@@ -674,32 +180,121 @@ export function DashboardOverview({ accounts, transactions }) {
         { f: `B${row} - C${row}` },
       ]);
     });
-    const tbTotalRow = uniqueAccounts.length + 2;
-    tbData.push([
-      "Total",
-      { f: `SUM(B2:B${tbTotalRow - 1})` },
-      { f: `SUM(C2:C${tbTotalRow - 1})` },
-      { f: `SUM(D2:D${tbTotalRow - 1})` },
-    ]);
-    tbData.push([
-      "Check",
-      { f: `IF(B${tbTotalRow}=C${tbTotalRow}, "Balanced", "Error")` },
-    ]);
     const tbSheet = XLSX.utils.aoa_to_sheet(tbData);
     XLSX.utils.book_append_sheet(workbook, tbSheet, "Trial Balance");
 
-    // ***** Cash Flow Statement *****
+    // 4) Balance Sheet (unchanged)
+    const bsData = [
+      ["Balance Sheet"],
+      [`As of ${format(currentDate, "MMMM yyyy")}`],
+      [""],
+      ["Assets"],
+    ];
+    let currentRowBS = 5;
+    const assetAccountsBS = uniqueAccounts.filter((acc) => acc.startsWith("Asset:"));
+    let combinedAssets = [...assetAccountsBS];
+    const cashAccount = cashBankAccounts[0] || "Bank/Cash";
+    if (!combinedAssets.includes(cashAccount) && uniqueAccounts.includes(cashAccount)) {
+      combinedAssets.push(cashAccount);
+    }
+    cashBankAccounts.forEach((acc) => {
+      if (!combinedAssets.includes(acc) && uniqueAccounts.includes(acc)) {
+        combinedAssets.push(acc);
+      }
+    });
+    combinedAssets.forEach((acc) => {
+      bsData.push([
+        acc,
+        { f: `VLOOKUP("${acc}", 'Trial Balance'!A:D, 4, FALSE)` },
+      ]);
+      currentRowBS++;
+    });
+    const totalAssetsRow = currentRowBS;
+    bsData.push([
+      "Total Assets",
+      { f: `SUM(B5:B${totalAssetsRow - 1})` },
+    ]);
+    currentRowBS++;
+    bsData.push([""]);
+    currentRowBS++;
+    bsData.push(["Liabilities"]);
+    currentRowBS++;
+    const liabilityAccounts = uniqueAccounts.filter((acc) => acc.startsWith("Liability:"));
+    const liabilityStartRow = currentRowBS;
+    liabilityAccounts.forEach((acc) => {
+      bsData.push([
+        acc,
+        { f: `VLOOKUP("${acc}", 'Trial Balance'!A:C, 3, FALSE)` },
+      ]);
+      currentRowBS++;
+    });
+    const liabilityEndRow = currentRowBS - 1;
+    bsData.push([
+      "Total Liabilities",
+      { f: `SUM(B${liabilityStartRow}:B${liabilityEndRow})` },
+    ]);
+    const totalLiabilitiesRow = currentRowBS;
+    currentRowBS++;
+    bsData.push([""]);
+    currentRowBS++;
+    bsData.push(["Equity"]);
+    currentRowBS++;
+    // Equity section (unchanged)
+    const ownerInvRow = currentRowBS;
+    bsData.push([
+      "Owner-Investment",
+      { f: `-VLOOKUP("Equity: owner-investment", 'Trial Balance'!A:D, 4, FALSE)` },
+    ]);
+    currentRowBS++;
+    const netIncomeRow = currentRowBS;
+    bsData.push([
+      "Net Income",
+      {
+        f: `-(
+          SUMIF('Trial Balance'!A:A, "Revenue:*", 'Trial Balance'!D:D)
+          +
+          SUMIF('Trial Balance'!A:A, "Expense:*", 'Trial Balance'!D:D)
+        )`,
+      },
+    ]);
+    currentRowBS++;
+    const ownerDrawRow = currentRowBS;
+    bsData.push([
+      "Less: Owner-Draw",
+      { f: `-VLOOKUP("Equity: owner-draw", 'Trial Balance'!A:D, 4, FALSE)` },
+    ]);
+    currentRowBS++;
+    const totalEquityRow = currentRowBS;
+    bsData.push([
+      "Total Equity",
+      { f: `B${ownerInvRow}+B${netIncomeRow}+B${ownerDrawRow}` },
+    ]);
+    currentRowBS++;
+    bsData.push([
+      "Total Liabilities & Equity",
+      { f: `B${totalLiabilitiesRow} + B${totalEquityRow}` },
+    ]);
+    const totalLiabilitiesAndEquityRow = currentRowBS;
+    currentRowBS++;
+    bsData.push([
+      "Check",
+      { f: `IF(B${totalAssetsRow}=B${totalLiabilitiesAndEquityRow}, "Balanced", "Error")` },
+    ]);
+    const bsSheet = XLSX.utils.aoa_to_sheet(bsData);
+    XLSX.utils.book_append_sheet(workbook, bsSheet, "Balance Sheet");
+
+    // 5) Cash Flow sheet (unchanged)
+    const investingTransactions = accountTransactions.filter(
+      (t) => t.type === "ASSET" || t.type === "ASSETS"
+    );
+    const netInvestingCashFlow = -investingTransactions.reduce(
+      (sum, t) => sum + t.amount,
+      0
+    );
     const cashReceivedFormula = `ABS(SUMIF('Trial Balance'!A:A, "Revenue:*", 'Trial Balance'!D:D))`;
     const cashPaidFormula = `SUMIF('Trial Balance'!A:A, "Expense:*", 'Trial Balance'!D:D)`;
-    const cashAccounts = accounts
-      .filter(
-        (a) =>
-          a.type &&
-          (a.type.toLowerCase() === "cash" || a.type.toLowerCase() === "bank")
-      )
-      .map((a) => a.name);
-    const cashAtTrialBalanceFormula = cashAccounts.length
-      ? cashAccounts
+    const cashAtTrialBalanceFormula = cashBankAccounts.length
+      ? cashBankAccounts
           .map(
             (acc) =>
               `SUMIF('Trial Balance'!A:A, "${acc}", 'Trial Balance'!D:D)`
@@ -716,7 +311,7 @@ export function DashboardOverview({ accounts, transactions }) {
       ["Net Cash from Operating Activities", { f: "B5 - B6" }],
       [""],
       ["Cash Flows from Investing Activities"],
-      ["Net Cash from Investing Activities", 0],
+      ["Net Cash from Investing Activities", netInvestingCashFlow.toFixed(2)],
       [""],
       ["Cash Flows from Financing Activities"],
       ["Net Cash from Financing Activities", 0],
@@ -724,108 +319,76 @@ export function DashboardOverview({ accounts, transactions }) {
       ["Net Increase in Cash", { f: "B7 + B10 + B13" }],
       ["Cash at Beginning of Period", { f: "B18 - B15" }],
       ["Cash at End of Period", { f: "B16 + B15" }],
-      [
-        "Cash at End of Period (from Trial Balance)",
-        { f: cashAtTrialBalanceFormula },
-      ],
+      ["Cash at End of Period (from Trial Balance)", { f: cashAtTrialBalanceFormula }],
       ["Check", { f: 'IF(B17=B18, "Balanced", "Error")' }],
     ];
     const cfSheet = XLSX.utils.aoa_to_sheet(cfData);
     XLSX.utils.book_append_sheet(workbook, cfSheet, "Cash Flow");
 
-    // ***** Profit & Loss Sheet *****
-    const revenueAccounts = uniqueAccounts.filter((acc) =>
+    // 6) Profit & Loss sheet (UPDATED to invert revenue sign)
+    const revenueAccountsPL = uniqueAccounts.filter((acc) =>
       acc.startsWith("Revenue:")
     );
-    const expenseAccounts = uniqueAccounts.filter((acc) =>
-      acc.startsWith("Expense:")
-    );
-    const plData = [
-      ["Profit & Loss Statement"],
-      [`For the Month Ending ${format(currentDate, "MMMM yyyy")}`],
-      [""],
-      ["Income"],
-    ];
-    let plRow = 5;
-    revenueAccounts.forEach((acc, index) => {
-      plData.push([
-        acc,
-        { f: `VLOOKUP(A${plRow + index}, 'Trial Balance'!A:D, 4, FALSE)` },
-      ]);
-    });
-    const revenueEndRow = plRow + revenueAccounts.length - 1;
-    plData.push(["Total Income", { f: `SUM(B5:B${revenueEndRow})` }]);
-    const totalIncomeRow = revenueEndRow + 1;
+    const plData = [];
+    plData.push(["Profit & Loss Statement"]);
+    plData.push([`For the Month Ending ${format(currentDate, "MMMM yyyy")}`]);
     plData.push([""]);
-    plData.push(["Expenses"]);
-    let expenseStartRow = totalIncomeRow + 3;
-    expenseAccounts.forEach((acc, index) => {
+
+    // Revenue Section (inverting the sign)
+    plData.push(["Revenue"]);
+    const revenueStartRow = 5; // Data starts at row 5
+    revenueAccountsPL.forEach((acc, index) => {
       plData.push([
         acc,
-        { f: `VLOOKUP(A${expenseStartRow + index}, 'Trial Balance'!A:D, 4, FALSE)` },
+        { f: `-VLOOKUP("${acc}", 'Trial Balance'!A:D, 4, FALSE)` },
       ]);
     });
-    const expenseEndRow = expenseStartRow + expenseAccounts.length - 1;
-    plData.push([
-      "Total Expenses",
-      { f: `SUM(B${expenseStartRow}:B${expenseEndRow})` },
-    ]);
-    const totalExpensesRow = expenseEndRow + 1;
-    plData.push([
-      "Net Profit",
-      { f: `B${totalIncomeRow} - B${totalExpensesRow}` },
-    ]);
+    const revenueEndRow = revenueStartRow + revenueAccountsPL.length - 1;
+    plData.push(["Total Revenue", { f: `SUM(B${revenueStartRow}:B${revenueEndRow})` }]);
+    const totalRevenueRow = revenueEndRow + 1;
+    plData.push([""]);
+
+    // Cost of Sales Section (assumed zero)
+    plData.push(["Cost of Sales"]);
+    plData.push(["Total Cost of Sales", 0]);
+    const totalCostSalesRow = plData.length;
+    plData.push([""]);
+
+    // Gross Profit and Gross Margin
+    plData.push(["Gross Profit", { f: `B${totalRevenueRow} - B${totalCostSalesRow}` }]);
+    const grossProfitRow = plData.length;
+    plData.push(["Gross Margin", { f: `IF(B${totalRevenueRow}=0,0,B${grossProfitRow}/B${totalRevenueRow})` }]);
+    plData.push([""]);
+
+    // Operating Expenses Section
+    plData.push(["Operating Expenses"]);
+    const opExpStartRow = plData.length + 1;
+    plData.push(["Travel Expense", { f: `VLOOKUP("Expense: travel", 'Trial Balance'!A:D, 4, FALSE)` }]);
+    plData.push(["Depreciation Expense", 143.33]);
+    const opExpEndRow = plData.length;
+    plData.push(["Total Operating Expenses", { f: `SUM(B${opExpStartRow}:B${opExpEndRow})` }]);
+    const totalOpExpRow = plData.length;
+    plData.push([""]);
+
+    // EBITDA = Gross Profit - Travel Expense
+    plData.push(["EBITDA", { f: `B${grossProfitRow} - B${opExpStartRow}` }]);
+    const ebitdaRowNum = plData.length;
+
+    // EBIT = EBITDA - Depreciation Expense
+    plData.push(["EBIT", { f: `B${ebitdaRowNum} - B${opExpStartRow + 1}` }]);
+    const ebitRowNum = plData.length;
+
+    // Income Tax Expense = 30% of EBIT
+    plData.push(["Income Tax Expense", { f: `0.30 * B${ebitRowNum}` }]);
+    const taxRowNum = plData.length;
+
+    // Net Profit After Tax = EBIT - Income Tax Expense
+    plData.push(["Net Profit After Tax", { f: `B${ebitRowNum} - B${taxRowNum}` }]);
+
     const plSheet = XLSX.utils.aoa_to_sheet(plData);
     XLSX.utils.book_append_sheet(workbook, plSheet, "Profit & Loss");
 
-    // ***** Balance Sheet ***** (Updated Section)
-    // Group accounts by type based on the passed-in accounts prop.
-    const assets = accounts.filter(
-      (a) =>
-        a.type &&
-        (a.type.toUpperCase() === "ASSETS" ||
-          a.type.toLowerCase() === "cash" ||
-          a.type.toLowerCase() === "bank")
-    );
-    const liabilities = accounts.filter(
-      (a) => a.type && a.type.toUpperCase() === "LIABILITIES"
-    );
-    const equity = accounts.filter(
-      (a) => a.type && a.type.toUpperCase() === "EQUITY"
-    );
-
-    const totalAssets = assets.reduce((sum, a) => sum + a.balance, 0);
-    const totalLiabilities = liabilities.reduce((sum, a) => sum + a.balance, 0);
-    const totalEquity = equity.reduce((sum, a) => sum + a.balance, 0);
-
-    const bsData = [];
-    bsData.push(["Balance Sheet"]);
-    bsData.push([`As of ${format(currentDate, "yyyy-MM-dd")}`]);
-    bsData.push([""]);
-    bsData.push(["Assets"]);
-    assets.forEach((a) => {
-      bsData.push([a.name, a.balance]);
-    });
-    bsData.push(["Total Assets", totalAssets]);
-    bsData.push([""]);
-    bsData.push(["Liabilities"]);
-    liabilities.forEach((a) => {
-      bsData.push([a.name, a.balance]);
-    });
-    bsData.push(["Total Liabilities", totalLiabilities]);
-    bsData.push([""]);
-    bsData.push(["Equity"]);
-    equity.forEach((a) => {
-      bsData.push([a.name, a.balance]);
-    });
-    bsData.push(["Total Equity", totalEquity]);
-    bsData.push([""]);
-    bsData.push(["Total Liabilities & Equity", totalLiabilities + totalEquity]);
-    bsData.push(["Check", totalAssets === totalLiabilities + totalEquity ? "Balanced" : "Error"]);
-    const bsSheet = XLSX.utils.aoa_to_sheet(bsData);
-    XLSX.utils.book_append_sheet(workbook, bsSheet, "Balance Sheet");
-
-    // ***** Historical P&L Sheet *****
+    // 7) Historical Profit & Loss sheet (unchanged)
     const earliestDate = transactions.reduce((min, t) => {
       const d = new Date(t.date);
       return d < min ? d : min;
@@ -857,67 +420,210 @@ export function DashboardOverview({ accounts, transactions }) {
     const hpSheet = XLSX.utils.aoa_to_sheet(hpData);
     XLSX.utils.book_append_sheet(workbook, hpSheet, "Historical P&L");
 
-    // ***** Financial Ratios Sheet *****
+    // 8) Financial Ratios sheet (UPDATED with advanced ratios)
     const frData = [
       ["Financial Ratios"],
       [`As of ${format(currentDate, "yyyy-MM-dd")}`],
       [""],
       ["Ratio", "Value"],
+      // Liquidity Ratios
       [
         "Current Ratio",
-        { f: `IF('Balance Sheet'!B2<>0, 'Balance Sheet'!B2 / 'Balance Sheet'!B${assets.length + 5}, "N/A")` },
+        {
+          f: `=(VLOOKUP("Asset: inventory", 'Trial Balance'!A:D, 4, FALSE)+VLOOKUP("Bank/Cash", 'Trial Balance'!A:D, 4, FALSE))/ABS(VLOOKUP("Liability: loan", 'Trial Balance'!A:D, 4, FALSE))`
+        },
       ],
       [
         "Quick Ratio",
         {
-          f: `IF('Balance Sheet'!B2<>0, ('Balance Sheet'!B2 - MIN('Balance Sheet'!B5:B${assets.length + 4})) / 'Balance Sheet'!B${assets.length + 5}, "N/A")`,
+          f: `=VLOOKUP("Bank/Cash", 'Trial Balance'!A:D, 4, FALSE)/ABS(VLOOKUP("Liability: loan", 'Trial Balance'!A:D, 4, FALSE))`
+        },
+      ],
+      // Profitability Ratios
+      [
+        "Gross Profit Margin",
+        {
+          f: `=IF(VLOOKUP("Total Revenue", 'Profit & Loss'!A:B, 2, FALSE)=0,0, (VLOOKUP("Gross Profit", 'Profit & Loss'!A:B, 2, FALSE))/(VLOOKUP("Total Revenue", 'Profit & Loss'!A:B, 2, FALSE)))`
         },
       ],
       [
-        "Debt-to-Equity Ratio",
-        { f: `IF('Balance Sheet'!B${assets.length + liabilities.length + 8}<>0, 'Balance Sheet'!B${assets.length + 4} / 'Balance Sheet'!B${assets.length + liabilities.length + 8}, "N/A")` },
+        "Net Profit Margin",
+        {
+          f: `=VLOOKUP("Net Profit After Tax", 'Profit & Loss'!A:B, 2, FALSE)/VLOOKUP("Total Revenue", 'Profit & Loss'!A:B, 2, FALSE)`
+        },
       ],
-      ["Net Cash from Operating Activities", { f: `='Cash Flow'!B7` }],
-      ["Net Increase in Cash", { f: `='Cash Flow'!B15` }],
+      // Efficiency Ratio
+      [
+        "Asset Turnover Ratio",
+        {
+          f: `=VLOOKUP("Total Revenue", 'Profit & Loss'!A:B, 2, FALSE)/VLOOKUP("Total Assets", 'Balance Sheet'!A:B, 2, FALSE)`
+        },
+      ],
+      // Leverage Ratio
+      [
+        "Debt-to-Equity Ratio",
+        {
+          f: `=ABS(VLOOKUP("Total Liabilities", 'Balance Sheet'!A:B, 2, FALSE))/VLOOKUP("Total Equity", 'Balance Sheet'!A:B, 2, FALSE)`
+        },
+      ],
+      // Return Ratios
+      [
+        "Return on Assets (ROA)",
+        {
+          f: `=VLOOKUP("Net Profit After Tax", 'Profit & Loss'!A:B, 2, FALSE)/VLOOKUP("Total Assets", 'Balance Sheet'!A:B, 2, FALSE)`
+        },
+      ],
+      [
+        "Return on Equity (ROE)",
+        {
+          f: `=VLOOKUP("Net Profit After Tax", 'Profit & Loss'!A:B, 2, FALSE)/VLOOKUP("Total Equity", 'Balance Sheet'!A:B, 2, FALSE)`
+        },
+      ],
     ];
     const frSheet = XLSX.utils.aoa_to_sheet(frData);
     XLSX.utils.book_append_sheet(workbook, frSheet, "Financial Ratios");
 
-    // ***** VAT Report Sheet *****
+    // 9) Advanced Dashboard sheet (new)
+    // This sheet aggregates key KPIs and charts data for an interactive overview.
+    const dashboardData = [
+      ["Dashboard"],
+      [`As of ${format(currentDate, "yyyy-MM-dd")}`],
+      [""],
+      ["Key Performance Indicators"],
+      ["Total Revenue", { f: `VLOOKUP("Total Revenue", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["Gross Profit", { f: `VLOOKUP("Gross Profit", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["Net Profit", { f: `VLOOKUP("Net Profit After Tax", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["Current Ratio", { f: `VLOOKUP("Current Ratio", 'Financial Ratios'!A:B, 2, FALSE)` }],
+      ["Quick Ratio", { f: `VLOOKUP("Quick Ratio", 'Financial Ratios'!A:B, 2, FALSE)` }],
+      ["EBITDA", { f: `VLOOKUP("EBITDA", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      [""],
+      ["Note: Charts and visualizations can be added in Excel using these data points."]
+    ];
+    const dashboardSheet = XLSX.utils.aoa_to_sheet(dashboardData);
+    XLSX.utils.book_append_sheet(workbook, dashboardSheet, "Dashboard");
+
+    // 10) Scenario Analysis sheet (new)
+    // Provide a table for "What-If" analysis with alternate assumptions.
+    const scenarioData = [
+      ["Scenario Analysis"],
+      ["Scenario", "Revenue Growth (%)", "Expense Change (%)", "Projected Net Profit"],
+      ["Base", 0, 0, { f: `VLOOKUP("Net Profit After Tax", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["Optimistic", 10, -5, { f: `VLOOKUP("Net Profit After Tax", 'Profit & Loss'!A:B, 2, FALSE)*1.10*0.95` }],
+      ["Pessimistic", -10, 5, { f: `VLOOKUP("Net Profit After Tax", 'Profit & Loss'!A:B, 2, FALSE)*0.90*1.05` }],
+      [""],
+      ["Note: Adjust assumptions as needed."]
+    ];
+    const scenarioSheet = XLSX.utils.aoa_to_sheet(scenarioData);
+    XLSX.utils.book_append_sheet(workbook, scenarioSheet, "Scenario Analysis");
+
+    // 11) Forecast/Trend Analysis sheet (new)
+    // Project future revenue for the next 6 months based on a given growth rate.
+    const forecastData = [
+      ["Forecast/Trend Analysis"],
+      ["Month", "Projected Revenue"],
+    ];
+    // Assume a fixed growth rate of 5%
+    for (let i = 1; i <= 6; i++) {
+      forecastData.push([
+        format(new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1), "MMMM yyyy"),
+        { f: `VLOOKUP("Total Revenue", 'Profit & Loss'!A:B, 2, FALSE)*(1+0.05)^${i}` }
+      ]);
+    }
+    const forecastSheet = XLSX.utils.aoa_to_sheet(forecastData);
+    XLSX.utils.book_append_sheet(workbook, forecastSheet, "Forecast");
+
+    // 12) Waterfall Analysis sheet (new)
+    // Create a structure showing the progression from Revenue to Net Profit.
+    const waterfallData = [
+      ["Waterfall Analysis"],
+      ["Description", "Amount"],
+      ["Total Revenue", { f: `VLOOKUP("Total Revenue", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["- Cost of Sales", 0],
+      ["= Gross Profit", { f: `VLOOKUP("Gross Profit", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["- Operating Expenses", { f: `VLOOKUP("Total Operating Expenses", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["= EBITDA", { f: `VLOOKUP("EBITDA", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["- Depreciation", 143.33],
+      ["= EBIT", { f: `VLOOKUP("EBIT", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["- Income Tax Expense", { f: `VLOOKUP("Income Tax Expense", 'Profit & Loss'!A:B, 2, FALSE)` }],
+      ["= Net Profit", { f: `VLOOKUP("Net Profit After Tax", 'Profit & Loss'!A:B, 2, FALSE)` }],
+    ];
+    const waterfallSheet = XLSX.utils.aoa_to_sheet(waterfallData);
+    XLSX.utils.book_append_sheet(workbook, waterfallSheet, "Waterfall");
+
+    // 13) KPI Tracking sheet (new)
+    // Additional detailed KPI metrics with space for conditional formatting (to be added in Excel)
+    const kpiData = [
+      ["KPI Tracking"],
+      ["Metric", "Value", "Target/Benchmark"],
+      ["Current Ratio", { f: `VLOOKUP("Current Ratio", 'Financial Ratios'!A:B, 2, FALSE)` }, 2.0],
+      ["Quick Ratio", { f: `VLOOKUP("Quick Ratio", 'Financial Ratios'!A:B, 2, FALSE)` }, 1.5],
+      ["Net Profit Margin", { f: `VLOOKUP("Net Profit Margin", 'Financial Ratios'!A:B, 2, FALSE)` }, "10%"],
+      ["ROA", { f: `VLOOKUP("Return on Assets (ROA)", 'Financial Ratios'!A:B, 2, FALSE)` }, "5%"],
+      ["ROE", { f: `VLOOKUP("Return on Equity (ROE)", 'Financial Ratios'!A:B, 2, FALSE)` }, "10%"],
+    ];
+    const kpiSheet = XLSX.utils.aoa_to_sheet(kpiData);
+    XLSX.utils.book_append_sheet(workbook, kpiSheet, "KPIs");
+
+    // 14) Drill-Down Detail sheet (new)
+    // This sheet copies the detailed ledger data for further filtering and analysis.
+    const drillDownData = [
+      ["Drill-Down Detail"],
+      ["Transaction ID", "Date", "Description", "Category", "Type", "Amount"],
+      ...accountTransactions.map((t) => [
+        t.id,
+        format(new Date(t.date), "yyyy-MM-dd"),
+        t.description || "Untitled Transaction",
+        t.category || "Uncategorized",
+        t.type,
+        t.amount.toFixed(2),
+      ]),
+    ];
+    const drillDownSheet = XLSX.utils.aoa_to_sheet(drillDownData);
+    XLSX.utils.book_append_sheet(workbook, drillDownSheet, "DrillDown");
+
+    // 15) Benchmarks sheet (new)
+    // Compare computed financial ratios to industry benchmarks (static values for illustration)
+    const benchmarksData = [
+      ["Industry Benchmarks"],
+      ["Metric", "Your Value", "Industry Benchmark"],
+      ["Current Ratio", { f: `VLOOKUP("Current Ratio", 'Financial Ratios'!A:B, 2, FALSE)` }, 2.0],
+      ["Quick Ratio", { f: `VLOOKUP("Quick Ratio", 'Financial Ratios'!A:B, 2, FALSE)` }, 1.5],
+      ["Gross Profit Margin", { f: `VLOOKUP("Gross Profit Margin", 'Financial Ratios'!A:B, 2, FALSE)` }, "50%"],
+      ["Net Profit Margin", { f: `VLOOKUP("Net Profit Margin", 'Financial Ratios'!A:B, 2, FALSE)` }, "10%"],
+      ["Debt-to-Equity Ratio", { f: `VLOOKUP("Debt-to-Equity Ratio", 'Financial Ratios'!A:B, 2, FALSE)` }, 1.0],
+      ["ROA", { f: `VLOOKUP("Return on Assets (ROA)", 'Financial Ratios'!A:B, 2, FALSE)` }, "5%"],
+      ["ROE", { f: `VLOOKUP("Return on Equity (ROE)", 'Financial Ratios'!A:B, 2, FALSE)` }, "10%"],
+    ];
+    const benchmarksSheet = XLSX.utils.aoa_to_sheet(benchmarksData);
+    XLSX.utils.book_append_sheet(workbook, benchmarksSheet, "Benchmarks");
+
+    // 9) VAT Report sheet (unchanged)
     const VAT_RATE = 0.16;
     let totalOutputVAT = 0,
       totalInputVAT = 0;
+    accountTransactions.forEach((t) => {
+      const vatAmount = t.amount * VAT_RATE;
+      if (t.type === "INCOME") totalOutputVAT += vatAmount;
+      else if (t.type === "EXPENSE") totalInputVAT += vatAmount;
+    });
     const vatRows = [
       ["VAT Report"],
       [`For the Month Ending ${format(currentDate, "MMMM yyyy")}`],
       [""],
       ["Transaction ID", "Type", "Amount", "VAT Amount"],
+      ...accountTransactions.map((t) => {
+        const vatAmount = t.amount * VAT_RATE;
+        return [t.id, t.type, t.amount.toFixed(2), vatAmount.toFixed(2)];
+      }),
+      [],
+      ["Total Output VAT", totalOutputVAT.toFixed(2)],
+      ["Total Input VAT", totalInputVAT.toFixed(2)],
+      ["Net VAT Payable", (totalOutputVAT - totalInputVAT).toFixed(2)],
     ];
-    accountTransactions.forEach((t) => {
-      const vatAmount = t.amount * VAT_RATE;
-      if (t.type === "INCOME") {
-        totalOutputVAT += vatAmount;
-      } else if (t.type === "EXPENSE") {
-        totalInputVAT += vatAmount;
-      }
-      vatRows.push([
-        t.id,
-        t.type,
-        t.amount.toFixed(2),
-        vatAmount.toFixed(2),
-      ]);
-    });
-    vatRows.push([]);
-    vatRows.push(["Total Output VAT", totalOutputVAT.toFixed(2)]);
-    vatRows.push(["Total Input VAT", totalInputVAT.toFixed(2)]);
-    vatRows.push([
-      "Net VAT Payable",
-      (totalOutputVAT - totalInputVAT).toFixed(2),
-    ]);
     const vatSheet = XLSX.utils.aoa_to_sheet(vatRows);
     XLSX.utils.book_append_sheet(workbook, vatSheet, "VAT Report");
 
-    // ***** Corporate Tax Summary Sheet *****
+    // 10) Corporate Tax sheet (unchanged)
     const totalIncome = accountTransactions
       .filter((t) => t.type === "INCOME")
       .reduce((sum, t) => sum + t.amount, 0);
@@ -935,32 +641,27 @@ export function DashboardOverview({ accounts, transactions }) {
       ["Total Expenses", totalExpenses.toFixed(2)],
       ["Net Profit", netProfit.toFixed(2)],
       ["Tax Rate", (taxRate * 100) + "%"],
-      [
-        "Corporate Tax Liability",
-        netProfit > 0 ? corporateTax.toFixed(2) : "0.00",
-      ],
+      ["Corporate Tax Liability", netProfit > 0 ? corporateTax.toFixed(2) : "0.00"],
     ];
     const taxSheet = XLSX.utils.aoa_to_sheet(taxSummaryData);
     XLSX.utils.book_append_sheet(workbook, taxSheet, "Corporate Tax");
 
-    // ***** Detailed Ledger Sheet *****
+    // 11) Detailed Ledger sheet (unchanged)
     const ledgerData = [
       ["Transaction ID", "Date", "Description", "Category", "Type", "Amount"],
-    ];
-    accountTransactions.forEach((t) => {
-      ledgerData.push([
+      ...accountTransactions.map((t) => [
         t.id,
         format(new Date(t.date), "yyyy-MM-dd"),
         t.description || "Untitled Transaction",
         t.category || "Uncategorized",
         t.type,
         t.amount.toFixed(2),
-      ]);
-    });
+      ]),
+    ];
     const ledgerSheet = XLSX.utils.aoa_to_sheet(ledgerData);
     XLSX.utils.book_append_sheet(workbook, ledgerSheet, "Detailed Ledger");
 
-    // ***** Depreciation Schedule Sheet *****
+    // 12) Depreciation Schedule sheet (unchanged)
     const depreciationData = [
       [
         "Asset Name",
@@ -971,43 +672,33 @@ export function DashboardOverview({ accounts, transactions }) {
         "Net Book Value",
       ],
     ];
-    const assetNames = accounts
-      .filter(
-        (a) =>
-          a.isAsset ||
-          (a.type &&
-            (a.type.toLowerCase() === "cash" || a.type.toLowerCase() === "bank"))
-      )
-      .map((a) => a.name);
+    const assetNames = uniqueAccounts.filter((acc) => acc.startsWith("Asset:"));
     assetNames.forEach((acc) => {
       depreciationData.push([
         acc,
-        { f: `VLOOKUP("${acc}", 'Chart of Accounts'!E:E, 1, FALSE)` },
+        { f: `VLOOKUP("${acc}", 'Trial Balance'!A:D, 4, FALSE)` },
         60,
-        { f: `ROUND(VLOOKUP("${acc}", 'Chart of Accounts'!E:E, 1, FALSE)/60,2)` },
-        { f: `ROUND(VLOOKUP("${acc}", 'Chart of Accounts'!E:E, 1, FALSE)/60,2)` },
-        { f: `VLOOKUP("${acc}", 'Chart of Accounts'!E:E, 1, FALSE) - ROUND(VLOOKUP("${acc}", 'Chart of Accounts'!E:E, 1, FALSE)/60,2)` },
+        { f: `ROUND(VLOOKUP("${acc}", 'Trial Balance'!A:D, 4, FALSE)/60,2)` },
+        { f: `ROUND(VLOOKUP("${acc}", 'Trial Balance'!A:D, 4, FALSE)/60,2)` },
+        {
+          f: `VLOOKUP("${acc}", 'Trial Balance'!A:D, 4, FALSE) - ROUND(VLOOKUP("${acc}", 'Trial Balance'!A:D, 4, FALSE)/60,2)`,
+        },
       ]);
     });
     const depreciationSheet = XLSX.utils.aoa_to_sheet(depreciationData);
     XLSX.utils.book_append_sheet(workbook, depreciationSheet, "Depreciation Schedule");
 
-    // ----- Set the file name based on the selected account -----
+    // Save file
     const selectedAccount = accounts.find((a) => a.id === selectedAccountId);
     const fileName = `${selectedAccount ? selectedAccount.name : "financial_report"}_${format(new Date(), "yyyy-MM-dd")}.xlsx`;
-
-    // Write the Excel file with the account name in the file name.
     XLSX.writeFile(workbook, fileName);
   };
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {/* Recent Transactions Card */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="text-base font-normal">
-            Recent Transactions
-          </CardTitle>
+          <CardTitle className="text-base font-normal">Recent Transactions</CardTitle>
           <div className="flex items-center gap-2">
             <Select value={selectedAccountId} onValueChange={setSelectedAccountId}>
               <SelectTrigger className="w-[140px]">
@@ -1039,9 +730,17 @@ export function DashboardOverview({ accounts, transactions }) {
                 No transactions available
               </p>
             ) : (
-              <div className={cn("space-y-4", isExpanded && "max-h-[400px] overflow-y-auto")}>
+              <div
+                className={cn(
+                  "space-y-4",
+                  isExpanded && "max-h-[400px] overflow-y-auto"
+                )}
+              >
                 {displayedTransactions.map((transaction) => (
-                  <div key={transaction.id} className="flex items-center justify-between">
+                  <div
+                    key={transaction.id}
+                    className="flex items-center justify-between"
+                  >
                     <div className="space-y-1">
                       <p className="text-sm font-medium leading-none">
                         {transaction.description || "Untitled Transaction"}
@@ -1051,7 +750,14 @@ export function DashboardOverview({ accounts, transactions }) {
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className={cn("flex items-center", transaction.type === "EXPENSE" ? "text-red-500" : "text-green-500")}>
+                      <div
+                        className={cn(
+                          "flex items-center",
+                          transaction.type === "EXPENSE"
+                            ? "text-red-500"
+                            : "text-green-500"
+                        )}
+                      >
                         {transaction.type === "EXPENSE" ? (
                           <ArrowDownRight className="mr-1 h-4 w-4" />
                         ) : (
@@ -1088,7 +794,6 @@ export function DashboardOverview({ accounts, transactions }) {
         </CardContent>
       </Card>
 
-      {/* Expense Breakdown Card */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base font-normal">
@@ -1111,12 +816,13 @@ export function DashboardOverview({ accounts, transactions }) {
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, value }) =>
-                      `${name}: $${value.toFixed(2)}`
-                    }
+                    label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
                   >
                     {pieChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip
@@ -1137,4 +843,3 @@ export function DashboardOverview({ accounts, transactions }) {
     </div>
   );
 }
-
