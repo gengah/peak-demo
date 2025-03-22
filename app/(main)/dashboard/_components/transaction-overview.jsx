@@ -108,9 +108,40 @@ export function DashboardOverview({ accounts, transactions }) {
     )
     .map((a) => a.name);
 
-  // Build dynamic general entries for transactions
+  // New Bank/Cash balance calculation
+  const calculateBankCashBalance = (transactions) => {
+    let balance = 0;
+    transactions.forEach((t) => {
+      const amount = parseFloat(t.amount);
+      if (t.type === "INCOME") {
+        balance += amount; // Debit: increases balance
+      } else if (t.type === "EXPENSE") {
+        balance -= amount; // Credit: decreases balance
+      } else if (t.type === "ASSET" || t.type === "ASSETS") {
+        balance -= amount; // Credit: decreases balance (purchase)
+      } else if (t.type === "LIABILITY" || t.type === "LIABILITIES") {
+        balance += amount; // Debit: increases balance (loan received)
+      } else if (t.type === "EQUITY") {
+        if (t.category === "owner-investment") {
+          balance += amount; // Debit: increases balance
+        } else if (t.category === "owner-draw") {
+          balance -= amount; // Credit: decreases balance
+        }
+      }
+    });
+    return balance.toFixed(2); // Return with 2 decimal places
+  };
+
+  const bankCashBalance = calculateBankCashBalance(transactions);
+
+  // Deduplicate transactions based on their id
+  const uniqueTransactions = Array.from(
+    new Map(transactions.map((t) => [t.id, t])).values()
+  );
+
+  // Build dynamic general entries using deduplicated transactions
   const dynamicEntries = [["Date", "Description", "Account", "Debit", "Credit"]];
-  accountTransactions.forEach((t) => {
+  uniqueTransactions.forEach((t) => {
     const dateStr = format(new Date(t.date), "yyyy-MM-dd");
     const description = t.description || "Untitled Transaction";
     const accountName = t.category || "Uncategorized";
@@ -183,7 +214,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const tbSheet = XLSX.utils.aoa_to_sheet(tbData);
     XLSX.utils.book_append_sheet(workbook, tbSheet, "Trial Balance");
 
-    // 4) Balance Sheet (unchanged)
+    // 4) Balance Sheet
     const bsData = [
       ["Balance Sheet"],
       [`As of ${format(currentDate, "MMMM yyyy")}`],
@@ -239,7 +270,6 @@ export function DashboardOverview({ accounts, transactions }) {
     currentRowBS++;
     bsData.push(["Equity"]);
     currentRowBS++;
-    // Equity section (unchanged)
     const ownerInvRow = currentRowBS;
     bsData.push([
       "Owner-Investment",
@@ -283,7 +313,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const bsSheet = XLSX.utils.aoa_to_sheet(bsData);
     XLSX.utils.book_append_sheet(workbook, bsSheet, "Balance Sheet");
 
-    // 5) Cash Flow sheet (unchanged)
+    // 5) Cash Flow sheet
     const investingTransactions = accountTransactions.filter(
       (t) => t.type === "ASSET" || t.type === "ASSETS"
     );
@@ -325,7 +355,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const cfSheet = XLSX.utils.aoa_to_sheet(cfData);
     XLSX.utils.book_append_sheet(workbook, cfSheet, "Cash Flow");
 
-    // 6) Profit & Loss sheet (UPDATED to invert revenue sign)
+    // 6) Profit & Loss sheet
     const revenueAccountsPL = uniqueAccounts.filter((acc) =>
       acc.startsWith("Revenue:")
     );
@@ -336,7 +366,7 @@ export function DashboardOverview({ accounts, transactions }) {
 
     // Revenue Section (inverting the sign)
     plData.push(["Revenue"]);
-    const revenueStartRow = 5; // Data starts at row 5
+    const revenueStartRow = 5;
     revenueAccountsPL.forEach((acc, index) => {
       plData.push([
         acc,
@@ -388,7 +418,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const plSheet = XLSX.utils.aoa_to_sheet(plData);
     XLSX.utils.book_append_sheet(workbook, plSheet, "Profit & Loss");
 
-    // 7) Historical Profit & Loss sheet (unchanged)
+    // 7) Historical Profit & Loss sheet
     const earliestDate = transactions.reduce((min, t) => {
       const d = new Date(t.date);
       return d < min ? d : min;
@@ -420,7 +450,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const hpSheet = XLSX.utils.aoa_to_sheet(hpData);
     XLSX.utils.book_append_sheet(workbook, hpSheet, "Historical P&L");
 
-    // 8) Financial Ratios sheet (UPDATED with advanced ratios)
+    // 8) Financial Ratios sheet
     const frData = [
       ["Financial Ratios"],
       [`As of ${format(currentDate, "yyyy-MM-dd")}`],
@@ -483,8 +513,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const frSheet = XLSX.utils.aoa_to_sheet(frData);
     XLSX.utils.book_append_sheet(workbook, frSheet, "Financial Ratios");
 
-    // 9) Advanced Dashboard sheet (new)
-    // This sheet aggregates key KPIs and charts data for an interactive overview.
+    // 9) Advanced Dashboard sheet
     const dashboardData = [
       ["Dashboard"],
       [`As of ${format(currentDate, "yyyy-MM-dd")}`],
@@ -502,8 +531,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const dashboardSheet = XLSX.utils.aoa_to_sheet(dashboardData);
     XLSX.utils.book_append_sheet(workbook, dashboardSheet, "Dashboard");
 
-    // 10) Scenario Analysis sheet (new)
-    // Provide a table for "What-If" analysis with alternate assumptions.
+    // 10) Scenario Analysis sheet
     const scenarioData = [
       ["Scenario Analysis"],
       ["Scenario", "Revenue Growth (%)", "Expense Change (%)", "Projected Net Profit"],
@@ -516,13 +544,11 @@ export function DashboardOverview({ accounts, transactions }) {
     const scenarioSheet = XLSX.utils.aoa_to_sheet(scenarioData);
     XLSX.utils.book_append_sheet(workbook, scenarioSheet, "Scenario Analysis");
 
-    // 11) Forecast/Trend Analysis sheet (new)
-    // Project future revenue for the next 6 months based on a given growth rate.
+    // 11) Forecast/Trend Analysis sheet
     const forecastData = [
       ["Forecast/Trend Analysis"],
       ["Month", "Projected Revenue"],
     ];
-    // Assume a fixed growth rate of 5%
     for (let i = 1; i <= 6; i++) {
       forecastData.push([
         format(new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1), "MMMM yyyy"),
@@ -532,8 +558,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const forecastSheet = XLSX.utils.aoa_to_sheet(forecastData);
     XLSX.utils.book_append_sheet(workbook, forecastSheet, "Forecast");
 
-    // 12) Waterfall Analysis sheet (new)
-    // Create a structure showing the progression from Revenue to Net Profit.
+    // 12) Waterfall Analysis sheet
     const waterfallData = [
       ["Waterfall Analysis"],
       ["Description", "Amount"],
@@ -550,8 +575,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const waterfallSheet = XLSX.utils.aoa_to_sheet(waterfallData);
     XLSX.utils.book_append_sheet(workbook, waterfallSheet, "Waterfall");
 
-    // 13) KPI Tracking sheet (new)
-    // Additional detailed KPI metrics with space for conditional formatting (to be added in Excel)
+    // 13) KPI Tracking sheet
     const kpiData = [
       ["KPI Tracking"],
       ["Metric", "Value", "Target/Benchmark"],
@@ -564,8 +588,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const kpiSheet = XLSX.utils.aoa_to_sheet(kpiData);
     XLSX.utils.book_append_sheet(workbook, kpiSheet, "KPIs");
 
-    // 14) Drill-Down Detail sheet (new)
-    // This sheet copies the detailed ledger data for further filtering and analysis.
+    // 14) Drill-Down Detail sheet
     const drillDownData = [
       ["Drill-Down Detail"],
       ["Transaction ID", "Date", "Description", "Category", "Type", "Amount"],
@@ -581,8 +604,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const drillDownSheet = XLSX.utils.aoa_to_sheet(drillDownData);
     XLSX.utils.book_append_sheet(workbook, drillDownSheet, "DrillDown");
 
-    // 15) Benchmarks sheet (new)
-    // Compare computed financial ratios to industry benchmarks (static values for illustration)
+    // 15) Benchmarks sheet
     const benchmarksData = [
       ["Industry Benchmarks"],
       ["Metric", "Your Value", "Industry Benchmark"],
@@ -597,7 +619,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const benchmarksSheet = XLSX.utils.aoa_to_sheet(benchmarksData);
     XLSX.utils.book_append_sheet(workbook, benchmarksSheet, "Benchmarks");
 
-    // 9) VAT Report sheet (unchanged)
+    // 16) VAT Report sheet
     const VAT_RATE = 0.16;
     let totalOutputVAT = 0,
       totalInputVAT = 0;
@@ -623,7 +645,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const vatSheet = XLSX.utils.aoa_to_sheet(vatRows);
     XLSX.utils.book_append_sheet(workbook, vatSheet, "VAT Report");
 
-    // 10) Corporate Tax sheet (unchanged)
+    // 17) Corporate Tax sheet
     const totalIncome = accountTransactions
       .filter((t) => t.type === "INCOME")
       .reduce((sum, t) => sum + t.amount, 0);
@@ -646,7 +668,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const taxSheet = XLSX.utils.aoa_to_sheet(taxSummaryData);
     XLSX.utils.book_append_sheet(workbook, taxSheet, "Corporate Tax");
 
-    // 11) Detailed Ledger sheet (unchanged)
+    // 18) Detailed Ledger sheet
     const ledgerData = [
       ["Transaction ID", "Date", "Description", "Category", "Type", "Amount"],
       ...accountTransactions.map((t) => [
@@ -661,7 +683,7 @@ export function DashboardOverview({ accounts, transactions }) {
     const ledgerSheet = XLSX.utils.aoa_to_sheet(ledgerData);
     XLSX.utils.book_append_sheet(workbook, ledgerSheet, "Detailed Ledger");
 
-    // 12) Depreciation Schedule sheet (unchanged)
+    // 19) Depreciation Schedule sheet
     const depreciationData = [
       [
         "Asset Name",
@@ -696,6 +718,68 @@ export function DashboardOverview({ accounts, transactions }) {
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
+      {/* New Card to display the correct Bank/Cash balance */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+          <CardTitle className="text-base font-normal">Bank/Cash Balance</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">
+            ${parseFloat(bankCashBalance).toLocaleString()}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Current balance as of {format(new Date(), "MMMM d, yyyy")}
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base font-normal">
+            Monthly Expense Breakdown
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0 pb-5">
+          {pieChartData.length === 0 ? (
+            <p className="text-center text-muted-foreground py-4">
+              No expenses this month
+            </p>
+          ) : (
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieChartData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
+                  >
+                    {pieChartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value) => `$${value.toFixed(2)}`}
+                    contentStyle={{
+                      backgroundColor: "hsl(var(--popover))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "var(--radius)",
+                    }}
+                  />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="text-base font-normal">Recent Transactions</CardTitle>
@@ -791,53 +875,6 @@ export function DashboardOverview({ accounts, transactions }) {
               </Button>
             )}
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-normal">
-            Monthly Expense Breakdown
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0 pb-5">
-          {pieChartData.length === 0 ? (
-            <p className="text-center text-muted-foreground py-4">
-              No expenses this month
-            </p>
-          ) : (
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieChartData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
-                  >
-                    {pieChartData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value) => `$${value.toFixed(2)}`}
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--popover))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: "var(--radius)",
-                    }}
-                  />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>
