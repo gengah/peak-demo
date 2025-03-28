@@ -7,37 +7,40 @@ import { subDays } from "date-fns";
 const ACCOUNT_ID = "account-id";
 const USER_ID = "user-id";
 
-// Categories with typical amount ranges for all transaction types
+// Updated Categories with typical amount ranges for accounting-relevant transaction types
 const CATEGORIES = {
   INCOME: [
-    { name: "salary", range: [5000, 8000] },
-    { name: "freelance", range: [1000, 3000] },
-    { name: "investments", range: [500, 2000] },
-    { name: "other-income", range: [100, 1000] },
+    { name: "sales", range: [1000, 10000] },        // Revenue from sales
+    { name: "services", range: [500, 5000] },       // Income from services provided
+    { name: "interest", range: [100, 1000] },       // Interest income
+    { name: "dividends", range: [200, 2000] },      // Dividend income
+    { name: "other", range: [100, 1000] },          // Miscellaneous income
   ],
   EXPENSE: [
-    { name: "housing", range: [1000, 2000] },
-    { name: "transportation", range: [100, 500] },
-    { name: "groceries", range: [200, 600] },
-    { name: "utilities", range: [100, 300] },
-    { name: "entertainment", range: [50, 200] },
-    { name: "food", range: [50, 150] },
-    { name: "shopping", range: [100, 500] },
-    { name: "healthcare", range: [100, 1000] },
-    { name: "education", range: [200, 1000] },
-    { name: "travel", range: [500, 2000] },
+    { name: "cost-of-goods-sold", range: [500, 5000] },  // Cost of goods sold
+    { name: "salaries", range: [1000, 10000] },          // Employee salaries
+    { name: "rent", range: [1000, 5000] },               // Rent for business premises
+    { name: "utilities", range: [100, 1000] },           // Utility expenses
+    { name: "depreciation", range: [100, 1000] },        // Depreciation expense
+    { name: "interest-expense", range: [100, 1000] },    // Interest on loans
+    { name: "advertising", range: [200, 2000] },         // Advertising costs
+    { name: "travel", range: [200, 2000] },              // Business travel expenses
+    { name: "office-supplies", range: [50, 500] },       // Office supplies
+    { name: "insurance", range: [100, 1000] },           // Insurance premiums
   ],
   EQUITY: [
-    { name: "owner-investment", range: [1000, 5000] },
-    { name: "owner-draw", range: [500, 2000] },
+    { name: "owner-investment", range: [1000, 10000] },  // Owner's capital contribution
+    { name: "owner-draw", range: [500, 5000] },          // Owner's withdrawals
   ],
   ASSETS: [
-    { name: "equipment", range: [1000, 10000] },
-    { name: "inventory", range: [500, 5000] },
+    { name: "equipment", range: [1000, 10000] },         // Equipment purchases
+    { name: "inventory", range: [500, 5000] },           // Inventory purchases
+    { name: "property", range: [10000, 100000] },        // Property purchases
   ],
   LIABILITIES: [
-    { name: "loan", range: [1000, 10000] },
-    { name: "accounts-payable", range: [100, 1000] },
+    { name: "loan", range: [1000, 10000] },              // Loan amounts
+    { name: "accounts-payable", range: [100, 1000] },    // Amounts owed to suppliers
+    { name: "notes-payable", range: [1000, 10000] },     // Promissory notes
   ],
 };
 
@@ -156,5 +159,4 @@ export async function seedTransactions() {
     console.error("Error seeding transactions:", error);
     return { success: false, error: error.message };
   }
-  
 }
