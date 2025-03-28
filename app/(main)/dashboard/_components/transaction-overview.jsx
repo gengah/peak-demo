@@ -173,6 +173,27 @@ export function DashboardOverview({ accounts, transactions }) {
     }
   });
 
+  // Incorporate Opening Balances
+  const openingEntries = accounts
+    .filter(a => a.openingBalance && a.openingBalance !== 0)
+    .map(a => {
+      let debit = "";
+      let credit = "";
+      const accType = a.type ? a.type.toLowerCase() : "";
+      if (accType === "asset" || accType === "expense") {
+        debit = a.openingBalance;
+      } else {
+        credit = a.openingBalance;
+      }
+      return ["Opening Balance", "Opening Balance", a.name, debit, credit];
+    });
+  const dynamicEntriesWithOpening = [
+    dynamicEntries[0],
+    ...openingEntries,
+    ...dynamicEntries.slice(1)
+  ];
+
+  // Merge with sample entries if flag is set; otherwise use the dynamic entries with opening balances
   const mergedEntries = includeSampleEntries
     ? [
         ["Date", "Description", "Account", "Debit", "Credit"],
@@ -180,9 +201,9 @@ export function DashboardOverview({ accounts, transactions }) {
         ["2024-01-31", "Rent Payment", cashBankAccounts[0] || "Bank/Cash", "", 20000],
         ["2024-01-31", "Salary Received", cashBankAccounts[0] || "Bank/Cash", 8000, ""],
         ["2024-01-31", "Salary Received", "Revenue: salary", "", 8000],
-        ...dynamicEntries.slice(1),
+        ...dynamicEntriesWithOpening.slice(1),
       ]
-    : dynamicEntries;
+    : dynamicEntriesWithOpening;
 
   const handleDownloadExcel = () => {
     if (mergedEntries.length === 1) return;
@@ -203,7 +224,7 @@ export function DashboardOverview({ accounts, transactions }) {
     ].sort();
     const tbData = [["Account", "Debit", "Credit", "Balance"]];
     uniqueAccounts.forEach((acc, index) => {
-      const row = index + 2; // offset for header row
+      const row = index + 2;
       tbData.push([
         acc,
         { f: `SUMIF('General Entries'!C:C, A${row}, 'General Entries'!D:D)` },
@@ -363,8 +384,6 @@ export function DashboardOverview({ accounts, transactions }) {
     plData.push(["Profit & Loss Statement"]);
     plData.push([`For the Month Ending ${format(currentDate, "MMMM yyyy")}`]);
     plData.push([""]);
-
-    // Revenue Section (inverting the sign)
     plData.push(["Revenue"]);
     const revenueStartRow = 5;
     revenueAccountsPL.forEach((acc, index) => {
@@ -377,20 +396,14 @@ export function DashboardOverview({ accounts, transactions }) {
     plData.push(["Total Revenue", { f: `SUM(B${revenueStartRow}:B${revenueEndRow})` }]);
     const totalRevenueRow = revenueEndRow + 1;
     plData.push([""]);
-
-    // Cost of Sales Section (assumed zero)
     plData.push(["Cost of Sales"]);
     plData.push(["Total Cost of Sales", 0]);
     const totalCostSalesRow = plData.length;
     plData.push([""]);
-
-    // Gross Profit and Gross Margin
     plData.push(["Gross Profit", { f: `B${totalRevenueRow} - B${totalCostSalesRow}` }]);
     const grossProfitRow = plData.length;
     plData.push(["Gross Margin", { f: `IF(B${totalRevenueRow}=0,0,B${grossProfitRow}/B${totalRevenueRow})` }]);
     plData.push([""]);
-
-    // Operating Expenses Section
     plData.push(["Operating Expenses"]);
     const opExpStartRow = plData.length + 1;
     plData.push(["Travel Expense", { f: `VLOOKUP("Expense: travel", 'Trial Balance'!A:D, 4, FALSE)` }]);
@@ -399,22 +412,13 @@ export function DashboardOverview({ accounts, transactions }) {
     plData.push(["Total Operating Expenses", { f: `SUM(B${opExpStartRow}:B${opExpEndRow})` }]);
     const totalOpExpRow = plData.length;
     plData.push([""]);
-
-    // EBITDA = Gross Profit - Travel Expense
     plData.push(["EBITDA", { f: `B${grossProfitRow} - B${opExpStartRow}` }]);
     const ebitdaRowNum = plData.length;
-
-    // EBIT = EBITDA - Depreciation Expense
     plData.push(["EBIT", { f: `B${ebitdaRowNum} - B${opExpStartRow + 1}` }]);
     const ebitRowNum = plData.length;
-
-    // Income Tax Expense = 30% of EBIT
     plData.push(["Income Tax Expense", { f: `0.30 * B${ebitRowNum}` }]);
     const taxRowNum = plData.length;
-
-    // Net Profit After Tax = EBIT - Income Tax Expense
     plData.push(["Net Profit After Tax", { f: `B${ebitRowNum} - B${taxRowNum}` }]);
-
     const plSheet = XLSX.utils.aoa_to_sheet(plData);
     XLSX.utils.book_append_sheet(workbook, plSheet, "Profit & Loss");
 
@@ -456,7 +460,6 @@ export function DashboardOverview({ accounts, transactions }) {
       [`As of ${format(currentDate, "yyyy-MM-dd")}`],
       [""],
       ["Ratio", "Value"],
-      // Liquidity Ratios
       [
         "Current Ratio",
         {
@@ -469,7 +472,6 @@ export function DashboardOverview({ accounts, transactions }) {
           f: `=VLOOKUP("Bank/Cash", 'Trial Balance'!A:D, 4, FALSE)/ABS(VLOOKUP("Liability: loan", 'Trial Balance'!A:D, 4, FALSE))`
         },
       ],
-      // Profitability Ratios
       [
         "Gross Profit Margin",
         {
@@ -482,21 +484,18 @@ export function DashboardOverview({ accounts, transactions }) {
           f: `=VLOOKUP("Net Profit After Tax", 'Profit & Loss'!A:B, 2, FALSE)/VLOOKUP("Total Revenue", 'Profit & Loss'!A:B, 2, FALSE)`
         },
       ],
-      // Efficiency Ratio
       [
         "Asset Turnover Ratio",
         {
           f: `=VLOOKUP("Total Revenue", 'Profit & Loss'!A:B, 2, FALSE)/VLOOKUP("Total Assets", 'Balance Sheet'!A:B, 2, FALSE)`
         },
       ],
-      // Leverage Ratio
       [
         "Debt-to-Equity Ratio",
         {
           f: `=ABS(VLOOKUP("Total Liabilities", 'Balance Sheet'!A:B, 2, FALSE))/VLOOKUP("Total Equity", 'Balance Sheet'!A:B, 2, FALSE)`
         },
       ],
-      // Return Ratios
       [
         "Return on Assets (ROA)",
         {
@@ -619,27 +618,30 @@ export function DashboardOverview({ accounts, transactions }) {
     const benchmarksSheet = XLSX.utils.aoa_to_sheet(benchmarksData);
     XLSX.utils.book_append_sheet(workbook, benchmarksSheet, "Benchmarks");
 
-    // 16) VAT Report sheet
+    // 16) VAT Report sheet - Updated for IFRS compliance
     const VAT_RATE = 0.16;
-    let totalOutputVAT = 0,
-      totalInputVAT = 0;
-    accountTransactions.forEach((t) => {
-      const vatAmount = t.amount * VAT_RATE;
-      if (t.type === "INCOME") totalOutputVAT += vatAmount;
-      else if (t.type === "EXPENSE") totalInputVAT += vatAmount;
-    });
+    // Filter only VAT-applicable transactions (INCOME and EXPENSE)
+    const vatApplicableTransactions = accountTransactions.filter(
+      (t) => t.type === "INCOME" || t.type === "EXPENSE"
+    );
+    const totalOutputVAT = vatApplicableTransactions
+      .filter((t) => t.type === "INCOME")
+      .reduce((sum, t) => sum + (t.amount * VAT_RATE), 0);
+    const totalInputVAT = vatApplicableTransactions
+      .filter((t) => t.type === "EXPENSE")
+      .reduce((sum, t) => sum + (t.amount * VAT_RATE), 0);
     const vatRows = [
       ["VAT Report"],
       [`For the Month Ending ${format(currentDate, "MMMM yyyy")}`],
       [""],
       ["Transaction ID", "Type", "Amount", "VAT Amount"],
-      ...accountTransactions.map((t) => {
+      ...vatApplicableTransactions.map((t) => {
         const vatAmount = t.amount * VAT_RATE;
         return [t.id, t.type, t.amount.toFixed(2), vatAmount.toFixed(2)];
       }),
       [],
-      ["Total Output VAT", totalOutputVAT.toFixed(2)],
-      ["Total Input VAT", totalInputVAT.toFixed(2)],
+      ["Total Output VAT (from Income)", totalOutputVAT.toFixed(2)],
+      ["Total Input VAT (from Expenses)", totalInputVAT.toFixed(2)],
       ["Net VAT Payable", (totalOutputVAT - totalInputVAT).toFixed(2)],
     ];
     const vatSheet = XLSX.utils.aoa_to_sheet(vatRows);
@@ -718,7 +720,6 @@ export function DashboardOverview({ accounts, transactions }) {
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {/* New Card to display the correct Bank/Cash balance */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="text-base font-normal">Bank/Cash Balance</CardTitle>
